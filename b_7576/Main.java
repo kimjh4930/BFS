@@ -45,7 +45,7 @@ public class Main {
 		Point p;
 		int temp_x, temp_y;
 		
-		while(!queue.isEmpty()) {
+		while(!queue.isEmpty()){
 			
 			p = queue.poll();
 			
