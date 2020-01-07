@@ -1,74 +1,85 @@
 package b_1697;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.util.LinkedList;
 import java.util.Queue;
-import java.util.Scanner;
 
 public class Main {
 	
-	static int[] visited = new int[100001];
+	static boolean visited[] = new boolean[100001];
 	
-	static int[] dx = {1, -1, 2};
+	static int start, end, time = 0;
 	
 	static Queue<Integer> queue = new LinkedList<>();
 	static Queue<Integer> tempQueue = new LinkedList<>();
 	
-	static int N, K;
-	static int time = 0;
-	
-	public static void main(String args[]) {
-		Scanner scan = new Scanner(System.in);
+	public static void main(String args[]) throws Exception {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		
-		N = scan.nextInt();
-		K = scan.nextInt();
+		String input[] = br.readLine().split(" ");
 		
-		for(int i=0; i<100001; i++) {
-			visited[i] = -1;
-		}
+		start = Integer.parseInt(input[0]);
+		end = Integer.parseInt(input[1]);
 		
-		visited[N] = time;
-		queue.add(N);
-		bfs();
+		queue.add(start);
+		visited[start] = true;
+		
+		find();
 		
 		System.out.println(time);
 		
-		scan.close();
+		br.close();
 	}
 	
-	static void bfs () {
-		int temp_x;
-		int x;
+	static int find() {
+		int p, tp = 0;
 		
-		if(N == K) {
-			return;
+		if(start == end) {
+			return 0;
 		}
 		
 		while(!queue.isEmpty()) {
-			x = queue.poll();
+			p = queue.poll();
 			
 			for(int i=0; i<3; i++) {
-				if(i < 2) {
-					temp_x = x + dx[i];
-				}else {
-					temp_x = x * dx[i];
+				switch (i) {
+				case 0:
+					tp = p-1;
+					break;
+				case 1:
+					tp = p+1;
+					break;
+				case 2:
+					tp = p<<1;
 				}
 				
-				if(temp_x >= 0 && temp_x < 100001) {
-					if(visited[temp_x] == -1) {
-						visited[temp_x] = time;
-						tempQueue.add(temp_x);
-					}
+				if(checkRange(tp) && visited[tp] == false) {
+					visited[tp] = true;
+					tempQueue.add(tp);
 				}
 			}
+			
 			if(queue.isEmpty()) {
 				time++;
-
-				if(visited[K] != -1) {
-					return;
+				
+				if(visited[end] == true) {
+					return time;
 				}
+				
 				queue.addAll(tempQueue);
 				tempQueue.clear();
 			}
 		}
+		
+		return time;
 	}
+	
+	static boolean checkRange (int point) {
+		if(point >= 0 && point <= 100000) {
+			return true;
+		}
+		return false;
+	}
+	
 }
